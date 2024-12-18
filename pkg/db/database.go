@@ -11,8 +11,8 @@ type DB struct {
 	conn *gorm.DB
 }
 
-func NewDB() (*DB, error) {
-	db, err := gorm.Open(sqlite.Open("go-file-uploader.db"), &gorm.Config{})
+func NewDB(dbFilename string) (*DB, error) {
+	db, err := gorm.Open(sqlite.Open(dbFilename), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
