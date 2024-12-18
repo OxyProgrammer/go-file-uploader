@@ -7,13 +7,6 @@ import (
 	"time"
 )
 
-type MainController struct {
-}
-
-func NewMainController() *MainController {
-	return &MainController{}
-}
-
 func (c *MainController) SolutionOne(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != http.MethodPost {
