@@ -4,7 +4,10 @@ import (
 	"time"
 )
 
-type TimeResponse struct {
-	Elapsed time.Duration `json:"elapsed"`
-	Error   string        `json:"error"`
+type Response struct {
+	Error         string        `json:"error"`
+	Message       string        `json:"message"`
+	MemoryUsage   uint64        `json:"memoryUsage"`
+	CPUTime       time.Duration `json:"cpuTime"`
+	ExecutionTime time.Duration `json:"elapsed"`
 }

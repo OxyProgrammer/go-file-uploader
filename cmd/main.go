@@ -39,7 +39,9 @@ func main() {
 
 	mainController := controllers.NewMainController()
 
-	http.HandleFunc("/", mainController.SolutionOne)
+	http.HandleFunc("/solution-one", mainController.SolutionOne)
+	http.HandleFunc("/solution-two", mainController.SolutionTwo)
+	http.HandleFunc("/solution-three", mainController.SolutionThree)
 
 	log.Println("Listening on 8080!")
 	http.ListenAndServe(":8080", nil)
