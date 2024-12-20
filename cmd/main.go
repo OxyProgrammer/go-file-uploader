@@ -22,7 +22,7 @@ func main() {
 		FolderName:      "data",
 		DbFileName:      "Db.sql",
 		FeedFileName:    "land_feed.csv",
-		FeedFileRowNums: 1000000,
+		FeedFileRowNums: 10000000,
 	}
 
 	//Create folder
@@ -37,7 +37,7 @@ func main() {
 	}
 	defer database.Close()
 
-	mainController := controllers.NewMainController()
+	mainController := controllers.NewMainController(database)
 
 	http.HandleFunc("/solution-one", mainController.SolutionOne)
 	http.HandleFunc("/solution-two", mainController.SolutionTwo)

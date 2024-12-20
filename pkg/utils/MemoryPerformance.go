@@ -2,11 +2,12 @@ package utils
 
 import (
 	"go-file-uploader/internal/dto"
+	"go-file-uploader/pkg/db"
 	"runtime"
 	"time"
 )
 
-func MeasurePerformance(f func() error) dto.Response {
+func MeasurePerformance(database *db.DB, f func(database *db.DB) error) dto.Response {
 	runtime.GC() // Run garbage collection before measurement
 
 	var stats dto.Response
@@ -17,7 +18,7 @@ func MeasurePerformance(f func() error) dto.Response {
 	startCPU := time.Duration(runtime.NumCPU())
 
 	// Run the function
-	err := f()
+	err := f(database)
 	if err != nil {
 		stats.Error = err.Error()
 		return stats
