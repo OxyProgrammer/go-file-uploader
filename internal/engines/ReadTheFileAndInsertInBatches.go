@@ -12,7 +12,7 @@ import (
 /*
 Reads the entities one by one and saves them in db one by one.
 */
-func ReadTheFileAndInsertInBatches(database *db.DB) error {
+func ReadLineAndAndInsertInBatches(database *db.DB) error {
 	file, err := os.Open("data/land_feed.csv")
 	if err != nil {
 		return err

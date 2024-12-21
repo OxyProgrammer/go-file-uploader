@@ -6,5 +6,5 @@ import (
 )
 
 func (c *MainController) SolutionTwo(w http.ResponseWriter, r *http.Request) {
-	c.createSolutionHandler("solution two", c.Database, engines.ReadTheFileAndInsertInBatches)(w, r)
+	c.createSolutionHandler("Read Line And And Insert In Batches", c.Database, engines.ReadLineAndAndInsertInBatches)(w, r)
 }
