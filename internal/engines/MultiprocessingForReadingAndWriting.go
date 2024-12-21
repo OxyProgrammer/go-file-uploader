@@ -20,13 +20,13 @@ func MultiprocessingForReadingAndWriting(database *db.DB) error {
 	readCh := make(chan *models.LandRead, 1000)
 	doneCh := make(chan struct{})
 	errCh := make(chan error)
-
+	const numWriters = 5 // Number of writing goroutines
 	go readAndProduceModelAsync(readCh, errCh)
 
 	var wg sync.WaitGroup
 	var mutex sync.Mutex
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < numWriters; i++ {
 		wg.Add(1)
 		go writeAndConsumeAsync(database, readCh, errCh, &wg, &mutex)
 	}

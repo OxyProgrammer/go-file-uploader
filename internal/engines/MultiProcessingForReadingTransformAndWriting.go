@@ -25,18 +25,34 @@ func MultiProcessingForReadingTransformAndWriting(database *db.DB) error {
 	transformCh := make(chan *models.Land, 1000)
 	doneCh := make(chan struct{})
 	errCh := make(chan error)
+	const numTransformers = 5 // Number of transformation goroutines
+	const numWriters = 5      // Number of writing goroutines
+
 	go readAndProduceRecords(recordCh, errCh)
-	go transformAndProduceDbModel(recordCh, transformCh, errCh)
+
 	var wg sync.WaitGroup
-	var mutex sync.Mutex
-	for i := 0; i < 10; i++ {
+	for i := 0; i < numTransformers; i++ {
 		wg.Add(1)
-		go writeAndConsumeDbModel(database, transformCh, errCh, &wg, &mutex)
+		go transformAndProduceDbModel(recordCh, transformCh, errCh, &wg)
 	}
+
+	var writeWg sync.WaitGroup
+	var mutex sync.Mutex
+	for i := 0; i < numWriters; i++ {
+		writeWg.Add(1)
+		go writeAndConsumeDbModel(database, transformCh, errCh, &writeWg, &mutex)
+	}
+
 	go func() {
 		wg.Wait()
+		close(transformCh) // Close transformCh once all transform goroutines finish
+	}()
+
+	go func() {
+		writeWg.Wait()
 		close(doneCh)
 	}()
+
 	for {
 		select {
 		case err := <-errCh:
@@ -57,10 +73,8 @@ func readAndProduceRecords(recordCh chan<- *Record, errCh chan<- error) {
 		log.Fatal(err)
 	}
 	defer file.Close()
-	// Create a CSV reader
 	reader := csv.NewReader(file)
-	//Read the headers
-	_, _ = reader.Read()
+	_, _ = reader.Read() // Read the headers
 	lineNumber := 1
 	for {
 		record, err := reader.Read()
@@ -82,8 +96,8 @@ func readAndProduceRecords(recordCh chan<- *Record, errCh chan<- error) {
 /*
 Reads from record channel, converts to read model and then subsequently to db model.
 */
-func transformAndProduceDbModel(recordCh <-chan *Record, transformCh chan<- *models.Land, errCh chan<- error) {
-	defer close(transformCh)
+func transformAndProduceDbModel(recordCh <-chan *Record, transformCh chan<- *models.Land, errCh chan<- error, wg *sync.WaitGroup) {
+	defer wg.Done()
 	for record := range recordCh {
 		readEntity, err := utils.CreateEntityFromRecord(record.Data, record.LineNo)
 		if err != nil {
