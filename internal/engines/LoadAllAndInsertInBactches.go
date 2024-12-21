@@ -11,7 +11,7 @@ import (
 /*
 Loads all entities in the memory and save them in the db.
 */
-func LoadAllAndInsertInBactches(database *db.DB) error {
+func LoadAllAndInsertInBatches(database *db.DB) error {
 	landReadModels, err := utils.ReadCSVAll("data/land_feed.csv")
 	if len(err) > 0 {
 		log.Fatal(err)
@@ -23,6 +23,7 @@ func LoadAllAndInsertInBactches(database *db.DB) error {
 	for _, landReadModel := range landReadModels {
 		dbLandModels = append(dbLandModels, models.FromReadModel(landReadModel))
 	}
+
 	eror := database.CreateLands(dbLandModels)
 	return eror
 }

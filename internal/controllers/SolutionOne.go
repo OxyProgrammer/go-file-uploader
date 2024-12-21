@@ -6,5 +6,5 @@ import (
 )
 
 func (c *MainController) SolutionOne(w http.ResponseWriter, r *http.Request) {
-	c.createSolutionHandler("solution one", c.Database, engines.LoadAllAndInsertInBactches)(w, r)
+	c.createSolutionHandler("LoadAll And Insert In Batches", c.Database, engines.LoadAllAndInsertInBatches)(w, r)
 }

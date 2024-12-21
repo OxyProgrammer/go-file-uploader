@@ -46,7 +46,7 @@ func ReadTheFileAndInsertInBatches(database *db.DB) error {
 		dbEntity := models.FromReadModel(*readEntity)
 		buffer = append(buffer, dbEntity)
 
-		if len(buffer) == 1000 {
+		if len(buffer) == 10000 {
 			database.CreateLands(buffer)
 			buffer = buffer[:0]
 		}
