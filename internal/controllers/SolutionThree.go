@@ -6,5 +6,5 @@ import (
 )
 
 func (c *MainController) SolutionThree(w http.ResponseWriter, r *http.Request) {
-	c.createSolutionHandler("Miltiprocessing For Reading And Writing", c.Database, engines.MiltiprocessingForReadingAndWriting)(w, r)
+	c.createSolutionHandler("Miltiprocessing For Reading And Writing", c.Database, engines.MultiprocessingForReadingAndWriting)(w, r)
 }

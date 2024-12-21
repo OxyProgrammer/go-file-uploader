@@ -15,13 +15,13 @@ import (
 Uses a buffered channel to read
 entities and save entitites in chunks.
 */
-func MiltiprocessingForReadingAndWriting(database *db.DB) error {
+func MultiprocessingForReadingAndWriting(database *db.DB) error {
 
 	readCh := make(chan *models.LandRead, 1000)
 	doneCh := make(chan struct{})
 	errCh := make(chan error)
 
-	go readAndProduceAsync(readCh, errCh)
+	go readAndProduceModelAsync(readCh, errCh)
 
 	var wg sync.WaitGroup
 	var mutex sync.Mutex
@@ -46,7 +46,10 @@ func MiltiprocessingForReadingAndWriting(database *db.DB) error {
 	}
 }
 
-func readAndProduceAsync(readCh chan<- *models.LandRead, errCh chan<- error) {
+/*
+Reads from the csv file, carves out the read model and publishes on a buferred channel
+*/
+func readAndProduceModelAsync(readCh chan<- *models.LandRead, errCh chan<- error) {
 
 	defer close(readCh)
 
@@ -83,6 +86,9 @@ func readAndProduceAsync(readCh chan<- *models.LandRead, errCh chan<- error) {
 	}
 }
 
+/*
+Takes feed from a channel that has read models, transforms them into db models and writes into db
+*/
 func writeAndConsumeAsync(database *db.DB, readCh <-chan *models.LandRead, errCh chan<- error, wg *sync.WaitGroup, mutex *sync.Mutex) {
 	defer wg.Done()
 

@@ -11,7 +11,7 @@ import (
 /*
 Loads all entities in the memory and save them in the db.
 */
-func LoadAllAndInsertInBatches(database *db.DB) error {
+func LoadAllAndInsert(database *db.DB) error {
 	landReadModels, err := utils.ReadCSVAll("data/land_feed.csv")
 	if len(err) > 0 {
 		log.Fatal(err)
