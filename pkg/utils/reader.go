@@ -5,47 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"go-file-uploader/internal/models"
-	"log"
 	"os"
 	"strconv"
 )
-
-func ReadCSVContinuous(filename string, entityChan chan<- models.LandRead, errorChan chan<- models.ReadErrorDetails) {
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-	// Create a CSV reader
-	reader := csv.NewReader(file)
-
-	//Read the headers
-	_, _ = reader.Read()
-
-	lineNumber := 1
-	for {
-		record, err := reader.Read()
-		if err != nil {
-			close(entityChan)
-			close(errorChan)
-			return
-		}
-
-		// Create an entity from the CSV record
-		entity, err := CreateEntityFromRecord(record, lineNumber)
-
-		if err != nil {
-			errorChan <- models.ReadErrorDetails{
-				LineNumber: 0,
-				ErrorText:  err.Error(),
-			}
-		}
-
-		// Send the entity to the channel
-		entityChan <- *entity
-		lineNumber++
-	}
-}
 
 func ReadCSVAll(filename string) ([]models.LandRead, []error) {
 	file, err := os.Open(filename)
