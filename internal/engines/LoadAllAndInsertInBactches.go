@@ -8,9 +8,12 @@ import (
 	"log"
 )
 
-func SolutionOne(database *db.DB) error {
+/*
+Loads all entities in the memory and save them in the db.
+*/
+func LoadAllAndInsertInBactches(database *db.DB) error {
 	landReadModels, err := utils.ReadCSVAll("data/land_feed.csv")
-	if err != nil && len(err) > 0 {
+	if len(err) > 0 {
 		log.Fatal(err)
 		return errors.New("Some error happened. Check logs.")
 	}
@@ -20,6 +23,6 @@ func SolutionOne(database *db.DB) error {
 	for _, landReadModel := range landReadModels {
 		dbLandModels = append(dbLandModels, models.FromReadModel(landReadModel))
 	}
-	errr := database.CreateLands(dbLandModels)
-	return errr
+	eror := database.CreateLands(dbLandModels)
+	return eror
 }

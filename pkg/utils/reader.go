@@ -32,7 +32,7 @@ func ReadCSVContinuous(filename string, entityChan chan<- models.LandRead, error
 		}
 
 		// Create an entity from the CSV record
-		entity, err := createEntityFromRecord(record, lineNumber)
+		entity, err := CreateEntityFromRecord(record, lineNumber)
 
 		if err != nil {
 			errorChan <- models.ReadErrorDetails{
@@ -65,7 +65,7 @@ func ReadCSVAll(filename string) ([]models.LandRead, []error) {
 
 	// Assuming the first row is headers, we start from index 1
 	for i, record := range records[1:] {
-		land, err := createEntityFromRecord(record, i)
+		land, err := CreateEntityFromRecord(record, i)
 		if err != nil {
 			errors = append(errors, err)
 			continue
@@ -75,7 +75,7 @@ func ReadCSVAll(filename string) ([]models.LandRead, []error) {
 	return lands, errors
 }
 
-func createEntityFromRecord(record []string, index int) (*models.LandRead, error) {
+func CreateEntityFromRecord(record []string, index int) (*models.LandRead, error) {
 
 	if nil == record {
 		return nil, errors.New("record is nil")

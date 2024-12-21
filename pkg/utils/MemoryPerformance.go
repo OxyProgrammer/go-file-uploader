@@ -15,7 +15,6 @@ func MeasurePerformance(database *db.DB, f func(database *db.DB) error) dto.Resp
 
 	// Measure start time and CPU time
 	startTime := time.Now()
-	startCPU := time.Duration(runtime.NumCPU())
 
 	// Run the function
 	err := f(database)
@@ -25,8 +24,6 @@ func MeasurePerformance(database *db.DB, f func(database *db.DB) error) dto.Resp
 	}
 	// Measure end time and CPU time
 	stats.ExecutionTime = time.Since(startTime)
-	endCPU := time.Duration(runtime.NumCPU())
-	stats.CPUTime = endCPU - startCPU
 
 	// Measure memory usage
 	runtime.ReadMemStats(&m)

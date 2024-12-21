@@ -12,7 +12,9 @@ type DB struct {
 }
 
 func NewDB(dbFilename string) (*DB, error) {
-	db, err := gorm.Open(sqlite.Open(dbFilename), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(dbFilename), &gorm.Config{
+		CreateBatchSize: 1000,
+	})
 	if err != nil {
 		return nil, err
 	}
